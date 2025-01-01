@@ -5,9 +5,70 @@
 #define _QWERTY 0
 #define _PROGRAM 1
 #define _NUM 2
+#define COMBO_TERM 50
 
 #define NUM MO(_NUM)
 #define PROGRAM MO(_PROGRAM)
+
+
+
+enum custom_keycodes {
+    SMTD_KEYCODES_BEGIN = SAFE_RANGE,
+    CKC_A, // reads as C(ustom) + KC_A, but you may give any name here
+    CKC_S,
+    CKC_D,
+    CKC_F,
+    CKC_J,
+    CKC_K,
+    CKC_L,
+    CKC_OE,
+    SMTD_KEYCODES_END,
+};
+
+#include "sm_td.h"
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (!process_smtd(keycode, record)) {
+        return false;
+    }
+    return true;
+}
+
+void on_smtd_action(uint16_t keycode, smtd_action action, uint8_t tap_count) {
+    switch (keycode) {
+        SMTD_MT(CKC_A, DE_A, KC_LEFT_GUI)
+        SMTD_MT(CKC_S, DE_S, KC_LEFT_ALT)
+        SMTD_MT(CKC_D, DE_D, KC_LEFT_CTRL)
+        SMTD_MT(CKC_F, DE_F, KC_LSFT)
+        SMTD_MT(CKC_J, DE_J, KC_LSFT)
+        SMTD_MT(CKC_K, DE_K, KC_LEFT_CTRL)
+        SMTD_MT(CKC_L, DE_L, KC_LEFT_ALT)
+        SMTD_MT(CKC_OE, DE_ODIA, KC_LEFT_GUI)
+    }
+}
+
+uint32_t get_smtd_timeout(uint16_t keycode, smtd_timeout timeout) {
+    switch (keycode) {
+        case CKC_F:
+        case CKC_J:
+            if (timeout == SMTD_TIMEOUT_TAP) return 150;
+            if (timeout == SMTD_TIMEOUT_RELEASE) return 5;
+        case CKC_D:
+        case CKC_K:
+            if (timeout == SMTD_TIMEOUT_TAP) return 150;
+            if (timeout == SMTD_TIMEOUT_RELEASE) return 5;
+        case CKC_S:
+        case CKC_L:
+            if (timeout == SMTD_TIMEOUT_TAP) return 250;
+            if (timeout == SMTD_TIMEOUT_RELEASE) return 5;
+        case CKC_A:
+        case CKC_OE:
+            if (timeout == SMTD_TIMEOUT_TAP) return 270;
+            if (timeout == SMTD_TIMEOUT_RELEASE) return 5;
+    }
+
+    return get_smtd_timeout_default(timeout);
+}
 
 enum combos {
   KL_ESC,
@@ -29,14 +90,14 @@ const uint16_t PROGMEM kl_combo[] = {DE_K, DE_L, COMBO_END};
 const uint16_t PROGMEM cw_togg[] = {KC_ENT, KC_B, COMBO_END};
 const uint16_t PROGMEM ot_open_terminal[] = {DE_O, DE_T, COMBO_END};
 const uint16_t PROGMEM kw_kill_window[] = {DE_K, DE_W, COMBO_END};
-const uint16_t PROGMEM workspace_1_combo[] = {KC_ENT, DE_A, COMBO_END};
-const uint16_t PROGMEM workspace_2_combo[] = {KC_ENT, DE_S, COMBO_END};
-const uint16_t PROGMEM workspace_3_combo[] = {KC_ENT, DE_D, COMBO_END};
-const uint16_t PROGMEM workspace_4_combo[] = {KC_ENT, DE_F, COMBO_END};
-const uint16_t PROGMEM workspace_5_combo[] = {KC_ENT, DE_J, COMBO_END};
-const uint16_t PROGMEM workspace_6_combo[] = {KC_ENT, DE_K, COMBO_END};
-const uint16_t PROGMEM workspace_7_combo[] = {KC_ENT, DE_L, COMBO_END};
-const uint16_t PROGMEM workspace_8_combo[] = {KC_ENT, DE_ODIA, COMBO_END};
+const uint16_t PROGMEM workspace_1_combo[] = {KC_ENT, CKC_A, COMBO_END};
+const uint16_t PROGMEM workspace_2_combo[] = {KC_ENT, CKC_S, COMBO_END};
+const uint16_t PROGMEM workspace_3_combo[] = {KC_ENT, CKC_D, COMBO_END};
+const uint16_t PROGMEM workspace_4_combo[] = {KC_ENT, CKC_F, COMBO_END};
+const uint16_t PROGMEM workspace_5_combo[] = {KC_ENT, CKC_J, COMBO_END};
+const uint16_t PROGMEM workspace_6_combo[] = {KC_ENT, CKC_K, COMBO_END};
+const uint16_t PROGMEM workspace_7_combo[] = {KC_ENT, CKC_L, COMBO_END};
+const uint16_t PROGMEM workspace_8_combo[] = {KC_ENT, CKC_OE, COMBO_END};
 const uint16_t PROGMEM email_combo[] = {KC_A, KC_B, COMBO_END};
 
 combo_t key_combos[] = {
@@ -59,7 +120,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT_5x6(
         KC_ESC , DE_1  , DE_2  , DE_3  , DE_4  , DE_5  ,                         DE_6  , DE_7  , DE_8  , DE_9  , DE_0  ,DE_SS,
         KC_TAB , DE_Q  , DE_W  , DE_E  , DE_R  , DE_T  ,                         DE_Z  , DE_U  , DE_I  , DE_O  , DE_P  ,DE_UDIA,
-        KC_LSFT, DE_A  , DE_S  , DE_D  , DE_F  , DE_G  ,                         DE_H  , DE_J  , DE_K  , DE_L  ,DE_ODIA,DE_ADIA,
+        KC_LSFT, CKC_A , CKC_S , CKC_D , CKC_F , DE_G  ,                         DE_H  , CKC_J , CKC_K , CKC_L ,CKC_OE ,DE_ADIA,
         KC_LCTL, DE_Y  , DE_X  , DE_C  , DE_V  , DE_B  ,                         DE_N  , DE_M  ,DE_COMM,DE_DOT ,DE_SLSH,DE_BSLS,
                         KC_HOME,KC_END,                                                       _______, _______,
                                          KC_BSPC,KC_SPC,                        KC_LSFT, KC_ENT,
