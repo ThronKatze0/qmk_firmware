@@ -5,7 +5,7 @@
 #define _QWERTY 0
 #define _PROGRAM 1
 #define _NUM 2
-#define COMBO_TERM 50
+#define COMBO_TERM 200
 
 #define NUM MO(_NUM)
 #define PROGRAM MO(_PROGRAM)
@@ -86,8 +86,8 @@ enum combos {
   EM_EMAIL,
 };
 
-const uint16_t PROGMEM kl_combo[] = {DE_K, DE_L, COMBO_END};
-const uint16_t PROGMEM cw_togg[] = {KC_ENT, KC_B, COMBO_END};
+const uint16_t PROGMEM kl_combo[] = {CKC_K, CKC_L, COMBO_END};
+const uint16_t PROGMEM cw_togg[] = {KC_ENT, KC_BSPC, COMBO_END};
 const uint16_t PROGMEM ot_open_terminal[] = {DE_O, DE_T, COMBO_END};
 const uint16_t PROGMEM kw_kill_window[] = {DE_K, DE_W, COMBO_END};
 const uint16_t PROGMEM workspace_1_combo[] = {KC_ENT, CKC_A, COMBO_END};
