@@ -5,7 +5,6 @@
 #define _QWERTY 0
 #define _PROGRAM 1
 #define _NUM 2
-#define COMBO_TERM 200
 
 #define NUM MO(_NUM)
 #define PROGRAM MO(_PROGRAM)
